@@ -9,3 +9,4 @@ kernel:
 authentication_token:
     path: /api/login_check
     methods: ['POST']
+
