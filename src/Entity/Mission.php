@@ -33,6 +33,12 @@ class Mission
     #[ORM\Column(type: 'integer')]
     private $BonusReward;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'missions')]
+    private $user;
+
+    #[ORM\ManyToOne(targetEntity: Categories::class, inversedBy: 'missions')]
+    private $categories;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -106,6 +112,30 @@ class Mission
     public function setBonusReward(int $BonusReward): self
     {
         $this->BonusReward = $BonusReward;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCategories(): ?Categories
+    {
+        return $this->categories;
+    }
+
+    public function setCategories(?Categories $categories): self
+    {
+        $this->categories = $categories;
 
         return $this;
     }

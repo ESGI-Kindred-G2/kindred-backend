@@ -21,6 +21,9 @@ class Bonus
     #[ORM\Column(type: 'integer')]
     private $Price;
 
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'bonus')]
+    private $user;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -46,6 +49,18 @@ class Bonus
     public function setPrice(int $Price): self
     {
         $this->Price = $Price;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
 
         return $this;
     }
