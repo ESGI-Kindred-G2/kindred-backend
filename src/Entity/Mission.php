@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\MissionRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MissionRepository::class)]
@@ -38,6 +40,23 @@ class Mission
 
     #[ORM\ManyToOne(targetEntity: Categories::class, inversedBy: 'missions')]
     private $categories;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $evaluated;
+
+    #[ORM\Column(type: 'integer', nullable: true)]
+    private $completed;
+
+    #[ORM\Column(type: 'string', length: 255, nullable: true)]
+    private $daysOfWeek;
+
+    #[ORM\OneToMany(mappedBy: 'missionId', targetEntity: MissionsHistory::class)]
+    private $missionsHistories;
+
+    public function __construct()
+    {
+        $this->missionsHistories = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -136,6 +155,72 @@ class Mission
     public function setCategories(?Categories $categories): self
     {
         $this->categories = $categories;
+
+        return $this;
+    }
+
+    public function getEvaluated(): ?int
+    {
+        return $this->evaluated;
+    }
+
+    public function setEvaluated(?int $evaluated): self
+    {
+        $this->evaluated = $evaluated;
+
+        return $this;
+    }
+
+    public function getCompleted(): ?int
+    {
+        return $this->completed;
+    }
+
+    public function setCompleted(?int $completed): self
+    {
+        $this->completed = $completed;
+
+        return $this;
+    }
+
+    public function getDaysOfWeek(): ?string
+    {
+        return $this->daysOfWeek;
+    }
+
+    public function setDaysOfWeek(?string $daysOfWeek): self
+    {
+        $this->daysOfWeek = $daysOfWeek;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, MissionsHistory>
+     */
+    public function getMissionsHistories(): Collection
+    {
+        return $this->missionsHistories;
+    }
+
+    public function addMissionsHistory(MissionsHistory $missionsHistory): self
+    {
+        if (!$this->missionsHistories->contains($missionsHistory)) {
+            $this->missionsHistories[] = $missionsHistory;
+            $missionsHistory->setMissionId($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMissionsHistory(MissionsHistory $missionsHistory): self
+    {
+        if ($this->missionsHistories->removeElement($missionsHistory)) {
+            // set the owning side to null (unless already changed)
+            if ($missionsHistory->getMissionId() === $this) {
+                $missionsHistory->setMissionId(null);
+            }
+        }
 
         return $this;
     }
