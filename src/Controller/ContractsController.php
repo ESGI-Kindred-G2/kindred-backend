@@ -16,9 +16,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
-class MissionHistoryApiController extends AbstractController
+class ContractsController extends AbstractController
 {
-    #[Route('/api/EventsHistoryData/', name: 'missionsHistoryApi')]
+    #[Route('/api/UserContracts/', name: 'contractsApi')]
     public function index(Request $request,UserPasswordHasherInterface $passwordHasher,ManagerRegistry $doctrine, TokenStorageInterface $tokenStorageInterface, JWTTokenManagerInterface $jwtManager): Response
     {
 
@@ -26,39 +26,26 @@ class MissionHistoryApiController extends AbstractController
         $this->tokenStorageInterface = $tokenStorageInterface;
         $decodedJwtToken = $this->jwtManager->decode($this->tokenStorageInterface->getToken());
 
-           $userConnected = $doctrine->getRepository(User::class)->findBy(['email' => $decodedJwtToken['email']]);
+        $userConnected = $doctrine->getRepository(User::class)->findBy(['email' => $decodedJwtToken['email']]);
+     //   dump($userConnected);
+        $contract1 = $userConnected[0]->getContracts();
+       
 
-           $userId = $userConnected[0]->getId();
+      //  $contract2 =$doctrine->getRepository(Contracts::class)->findBy(['id' => $contract1->getId()]);
 
-           if($userConnected[0]->getRoles()[0] == 'ROLE_PARENT'){
-            $contract1 = $userConnected[0]->getContracts();
+        /*
+            $user = $doctrine->getRepository(User::class)->find($userid);
+            $contract1 = $user->getContracts();
             $contract2 = $doctrine->getRepository(Contracts::class)->findBy(['id' => $contract1[0]->getId()]);
             $contracts3 = $contract2[0]->getUsers()->getValues();
-            
-            foreach($contracts3 as $c){
-                if($c->getRoles()[0] == 'ROLE_CHILD'){
-                    $userId = $c->getId();
-                }
-            }
-           }
 
-           $mission = $doctrine->getRepository(Mission::class)->findBy(['user' => $userId]);
+        */
 
-            $EventsData = [];
-            foreach($mission as $EventData){
-                $missionHistory = $doctrine->getRepository(MissionsHistory::class)->findBy(['id' => $EventData->getId()]);
-                if ($missionHistory != null ){
-                    $EventsData[] = [
-                        'history' => $missionHistory,
-                    ];
-                }
-            }
 
         return $this->json([
-            'message' => 'Find User',
-            $EventsData,
+            'message' => 'Find contract',
+            $contract1,
         ]);
-
 
     }
 

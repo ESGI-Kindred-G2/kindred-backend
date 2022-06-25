@@ -22,17 +22,32 @@ class MissionApiController extends AbstractController
     public function index(Request $request,UserPasswordHasherInterface $passwordHasher,ManagerRegistry $doctrine, TokenStorageInterface $tokenStorageInterface, JWTTokenManagerInterface $jwtManager): Response
     {
 
-        $this->jwtManager = $jwtManager;
-        $this->tokenStorageInterface = $tokenStorageInterface;
-        $decodedJwtToken = $this->jwtManager->decode($this->tokenStorageInterface->getToken());
+            $this->jwtManager = $jwtManager;
+            $this->tokenStorageInterface = $tokenStorageInterface;
+            $decodedJwtToken = $this->jwtManager->decode($this->tokenStorageInterface->getToken());
 
            $userConnected = $doctrine->getRepository(User::class)->findBy(['email' => $decodedJwtToken['email']]);
 
-           $mission = $doctrine->getRepository(Mission::class)->findBy(['user' => $userConnected[0]->getId()]);
+           $userId = $userConnected[0]->getId();
+
+           if($userConnected[0]->getRoles()[0] == 'ROLE_PARENT'){
+            $contract1 = $userConnected[0]->getContracts();
+            $contract2 = $doctrine->getRepository(Contracts::class)->findBy(['id' => $contract1[0]->getId()]);
+            $contracts3 = $contract2[0]->getUsers()->getValues();
+            
+            foreach($contracts3 as $c){
+                if($c->getRoles()[0] == 'ROLE_CHILD'){
+                    $userId = $c->getId();
+                }
+            }
+           }
+
+
+           $mission = $doctrine->getRepository(Mission::class)->findBy(['user' => $userId]);
 
             $EventsData = [];
             foreach($mission as $EventData){
-                $missionHistory = $doctrine->getRepository(MissionsHistory::class)->findBy(['id' => $EventData->getId()]);
+                $missionHistory = $doctrine->getRepository(MissionsHistory::class)->findBy(['missionId' => $EventData->getId()]);
                 $EventsData[] = [
                     'completed' => $EventData->getCompleted(),
                     'date' => $EventData->getDate(),
@@ -40,7 +55,9 @@ class MissionApiController extends AbstractController
                     'id' => $EventData->getId(),
                     'reward' => $EventData->getReward(),
                     'bonusReward' => $EventData->getBonusReward(),
+                    'daysOfWeek' => $EventData->getDaysOfWeek(),
                     'name' => $EventData->getName(),
+                    "categories" => $EventData->getCategories(),
                     'history' => $missionHistory,
                 ];
             }
