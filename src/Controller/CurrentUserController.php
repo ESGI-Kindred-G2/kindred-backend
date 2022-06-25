@@ -28,10 +28,6 @@ class CurrentUserController extends AbstractController
 
         $userConnected = $doctrine->getRepository(User::class)->findBy(['email' => $decodedJwtToken['email']]);
   
-        $user = $doctrine->getRepository(User::class)->find($userConnected[0]->getId());
-        $contract1 = $user->getContracts();
-        $contract2 = $doctrine->getRepository(Contracts::class)->findBy(['id' => $contract1[0]->getId()]);
-        $contracts3 = $contract2[0]->getUsers()->getValues();
             
         
 
