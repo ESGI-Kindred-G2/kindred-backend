@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Categories;
 use App\Entity\Mission;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -17,7 +18,7 @@ class AppFixtures extends Fixture
         for ($i = 0; $i < 5; $i++) {
             $user = new User();
             $user->setEmail($faker->safeEmail());
-            $user->setRoles($faker->randomElement(['ROLE_PARENT', 'ROLE_CHILD']));
+            $user->setRoles([$faker->randomElement(['ROLE_PARENT', 'ROLE_CHILD'])]);
             $user->setPassword('test');
             $user->setName($faker->name());
             $user->setBonusPoints($faker->randomDigit());
@@ -29,14 +30,19 @@ class AppFixtures extends Fixture
                 $mission->setCreatedAt($faker->dateTimeThisYear());
                 $mission->setDate($faker->dateTimeThisYear());
                 $mission->setBonusReward($faker->randomDigit()); // ajout bonus Id
-                $mission->setUser($this->user); // ajout un id de user
-                $mission->setCategories($this->catogorie); // ajout id de categorie
+                $mission->setUser($user);
                 $mission->setEvaluated($faker->numberBetween(null|1, 3));
                 $mission->setCompleted($faker->numberBetween(0, 1));
                 $daysOfWeek = json_encode($faker->randomElements(['1', '2', '3', '4', '5', '6', '7'], 2), true);
                 $mission->setDaysOfWeek($daysOfWeek);
+                for ($i=0; $i < 1; $i++) { 
+                    $categories = new Categories();
+                    $categories->setName($faker->word());
+                    $categories->setColor($faker->hexColor());
+                    $categories->addMission($mission);
+                }
             }
-            $manager->persist($mission);
+            $manager->persist($categories);
             $manager->flush();
         }
 

@@ -26,10 +26,10 @@ class Mission
     #[ORM\Column(type: 'boolean')]
     private $Converted;
 
-    #[ORM\Column(type: 'datetime_immutable')]
+    #[ORM\Column(type: 'datetime')]
     private $CreatedAt;
 
-    #[ORM\Column(type: 'date_immutable')]
+    #[ORM\Column(type: 'date')]
     private $Date;
 
     #[ORM\Column(type: 'integer')]
@@ -99,24 +99,24 @@ class Mission
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->CreatedAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $CreatedAt): self
+    public function setCreatedAt(\DateTimeInterface $CreatedAt): self
     {
         $this->CreatedAt = $CreatedAt;
 
         return $this;
     }
 
-    public function getDate(): ?\DateTimeImmutable
+    public function getDate(): ?\DateTimeInterface
     {
         return $this->Date;
     }
 
-    public function setDate(\DateTimeImmutable $Date): self
+    public function setDate(\DateTimeInterface $Date): self
     {
         $this->Date = $Date;
 
