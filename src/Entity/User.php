@@ -70,6 +70,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $missions;
 
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Bonus::class)]
+    /**
+     * @Groups("user:read")
+     */
     private $bonus;
 
     #[ORM\ManyToMany(targetEntity: Contracts::class, inversedBy: 'users')]

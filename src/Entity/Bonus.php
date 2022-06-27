@@ -5,6 +5,7 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\BonusRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: BonusRepository::class)]
 #[ApiResource]
@@ -13,12 +14,21 @@ class Bonus
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups({"bonus:read", "user:read"})
+     */
     private $id;
 
     #[ORM\Column(type: 'string', length: 255)]
+    /**
+     * @Groups({"bonus:read", "user:read"})
+     */
     private $Name;
 
     #[ORM\Column(type: 'integer')]
+    /**
+     * @Groups({"bonus:read", "user:read"})
+     */
     private $Price;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'bonus')]
