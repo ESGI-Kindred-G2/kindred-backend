@@ -70,7 +70,7 @@ class AppFixtures extends Fixture
                 $bonus = new Bonus();
                 $bonus->setName($faker->name());
                 $bonus->setPrice($faker->randomDigit());
-                $bonus->setUser($user)
+                $bonus->setUser($user);
             }
             // créer des historiques récompenses pour les users          
             for ($i = 0; $i < 5; $i++) {

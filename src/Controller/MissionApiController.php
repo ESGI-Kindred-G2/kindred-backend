@@ -48,15 +48,18 @@ class MissionApiController extends AbstractController
             $EventsData = [];
             foreach($mission as $EventData){
                 $missionHistory = $doctrine->getRepository(MissionsHistory::class)->findBy(['missionId' => $EventData->getId()]);
+                $originalDate = $EventData->getDate();
+                $timestamp = strtotime($originalDate); 
+                $newDate = date("Y-m-d", $timestamp );
                 $EventsData[] = [
                     'completed' => $EventData->getCompleted(),
-                    'date' => $EventData->getDate(),
+                    'date' => $newDate,
                     'evaluated' => $EventData->getEvaluated(),
                     'id' => $EventData->getId(),
                     'reward' => $EventData->getReward(),
                     'bonusReward' => $EventData->getBonusReward(),
                     'daysOfWeek' => $EventData->getDaysOfWeek(),
-                    'name' => $EventData->getName(),
+                    'title' => $EventData->getName(),
                     "categories" => $EventData->getCategories(),
                     'history' => $missionHistory,
                 ];
