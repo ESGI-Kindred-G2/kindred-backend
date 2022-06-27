@@ -22,7 +22,7 @@ class AppFixtures extends Fixture
         $categories = new Categories();
         $categories->setName($faker->word());
         $categories->setColor($faker->hexColor());
-        //$categories->addMission($mission);
+        $categories->addMission($mission);
 
         for ($i = 0; $i < 5; $i++) {
             $user = new User();
