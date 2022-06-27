@@ -37,6 +37,12 @@ class AppFixtures extends Fixture
                 $missionhistory->setEvaluatedDate($faker->dateTime());
                 $missionhistory->setCompletedDate($faker->dateTime());
             }
+            for ($i = 0; $i < 5; $i++) {
+                $bonus = new Bonus();
+                $bonus->setName($faker->name());
+                $bonus->setPrice($faker->randomFloat());
+                $bonus->setUser($user);
+            }
             for ($i=0; $i < 5 ; $i++) {
                 $mission = new Mission();
                 $mission->setName($faker->name());
@@ -51,8 +57,6 @@ class AppFixtures extends Fixture
                 $daysOfWeek = json_encode($faker->randomElements(['1', '2', '3', '4', '5', '6', '7'], 2), true);
                 $mission->setDaysOfWeek($daysOfWeek);
                 $mission->addMissionsHistory($missionhistory);
-                $mission->addBonu($bonus);
-                $mission->addContract($contract);
                 
     
             }
@@ -66,12 +70,6 @@ class AppFixtures extends Fixture
                 $contracts->addUser($user);
             }
             // créer des bonus pour les users
-            for ($i = 0; $i < 5; $i++) {
-                $bonus = new Bonus();
-                $bonus->setName($faker->name());
-                $bonus->setPrice($faker->randomFloat());
-                $bonus->setUser($user);
-            }
             // créer des historiques récompenses pour les users          
             for ($i = 0; $i < 5; $i++) {
                 $historiqueRecomp = new HistoriqueRecompense();
@@ -79,6 +77,8 @@ class AppFixtures extends Fixture
                 $historiqueRecomp->setDateRecomp($faker->dateTimeThisYear());
                 $historiqueRecomp->setCoutRecomp($faker->randomDigit());
             }
+            $user->addBonu($bonus);
+            $user->addContract($contracts);
             $manager->persist($categories);
             $manager->flush();
         }
