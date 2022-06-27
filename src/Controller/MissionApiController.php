@@ -7,6 +7,7 @@ use App\Entity\Contracts;
 use App\Entity\Mission;
 use App\Entity\MissionsHistory;
 use App\Entity\User;
+use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -48,12 +49,9 @@ class MissionApiController extends AbstractController
             $EventsData = [];
             foreach($mission as $EventData){
                 $missionHistory = $doctrine->getRepository(MissionsHistory::class)->findBy(['missionId' => $EventData->getId()]);
-                $originalDate = $EventData->getDate();
-                $timestamp = strtotime($originalDate); 
-                $newDate = date("Y-m-d", $timestamp );
                 $EventsData[] = [
                     'completed' => $EventData->getCompleted(),
-                    'date' => $newDate,
+                    'date' => date_format($EventData->getDate(),"Y-m-d"),
                     'evaluated' => $EventData->getEvaluated(),
                     'id' => $EventData->getId(),
                     'reward' => $EventData->getReward(),
